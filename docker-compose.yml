@@ -1,0 +1,18 @@
+services:
+  softprog:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      NODE_ENV: production
+      PORT: "8787"
+      TELETHON_BACKEND_URL: http://127.0.0.1:8787
+      TELETHON_PYTHON: /usr/local/bin/python3.10
+      SOFTPROG_LICENSE_API_URL: http://5.42.122.59:8090
+    volumes:
+      - softprog-data:/app/data
+      - softprog-sessions:/app/sessions
+
+volumes:
+  softprog-data:
+  softprog-sessions:

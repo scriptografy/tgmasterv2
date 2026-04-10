@@ -1,0 +1,2 @@
+# Для npm run obfuscate:parser (опционально)
+pyarmor>=9.0

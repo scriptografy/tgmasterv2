@@ -1,0 +1,9 @@
+node_modules
+release
+dist
+.git
+parser_obf
+.env
+.env.*
+*.log
+.cursor

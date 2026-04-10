@@ -1,0 +1,48 @@
+{
+  "name": "softprog-ui",
+  "description": "",
+  "private": true,
+  "version": "1.0.0",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js",
+    "dev": "cross-env SOFTPROG_PARSER_DIR=parser concurrently -k -n srv,vite -c blue,green \"node server/index.js\" \"vite\"",
+    "dev:all": "cross-env SOFTPROG_PARSER_DIR=parser concurrently -k -n srv,vite -c blue,green \"node server/index.js\" \"vite\"",
+    "dev:obf": "concurrently -k -n srv,vite -c blue,green \"node server/index.js\" \"vite\"",
+    "build": "vite build",
+    "obfuscate:parser": "node tools/obfuscate-parser.mjs",
+    "obfuscate:parser:docker": "node tools/obfuscate-parser-docker.mjs",
+    "obfuscate:parser:docker:sudo": "cross-env SOFTPROG_DOCKER_SUDO=1 node tools/obfuscate-parser-docker.mjs",
+    "release": "node tools/build-release.mjs",
+    "release:all": "npm run obfuscate:parser && npm run release",
+    "release:all:docker": "npm run obfuscate:parser:docker && npm run release",
+    "release:all:docker:sudo": "cross-env SOFTPROG_DOCKER_SUDO=1 node tools/obfuscate-parser-docker.mjs && npm run release",
+    "relise:all": "npm run release:all",
+    "relise:all:docker": "npm run release:all:docker",
+    "relise:all:docker:sudo": "npm run release:all:docker:sudo",
+    "docker:up": "docker compose up --build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "prod": "npm run build && node tools/assert-dist-accounts-detailed.mjs && cross-env NODE_ENV=production node server/index.js",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.17",
+    "better-sqlite3": "^12.8.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "lucide-react": "^0.511.0",
+    "multer": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "autoprefixer": "^10.4.27",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.17",
+    "vite": "^5.4.10"
+  }
+}
