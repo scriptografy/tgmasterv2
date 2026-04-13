@@ -1,0 +1,2 @@
+# For `npm run release:all` / `npm run obfuscate:parser` (not needed to run the parser)
+pyarmor>=9.0.0

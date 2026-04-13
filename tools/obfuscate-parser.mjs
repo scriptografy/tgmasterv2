@@ -28,7 +28,10 @@ const childEnv = {
   PATH: localBin ? `${localBin}${sep}${process.env.PATH || ""}` : process.env.PATH,
 };
 
-const r = spawnSync("pyarmor", ["gen", "-O", "parser_obf", ...inputs], {
+const pyExe = process.env.PYTHON?.trim() || (process.platform === "win32" ? "python" : "python3");
+const genArgs = ["gen", "-O", "parser_obf", ...inputs];
+
+let r = spawnSync("pyarmor", genArgs, {
   cwd: root,
   stdio: "inherit",
   shell: process.platform === "win32",
@@ -36,14 +39,25 @@ const r = spawnSync("pyarmor", ["gen", "-O", "parser_obf", ...inputs], {
 });
 
 if (r.error) {
-  console.error("obfuscate-parser: pyarmor не найден");
+  r = spawnSync(pyExe, ["-m", "pyarmor.cli", ...genArgs], {
+    cwd: root,
+    stdio: "inherit",
+    shell: process.platform === "win32",
+    env: childEnv,
+  });
+}
+
+if (r.error) {
+  console.error(
+    "obfuscate-parser: pyarmor не найден — установите: pip install pyarmor " +
+      "или pip install -r parser/requirements-release.txt",
+  );
   process.exit(1);
 }
 if (r.status !== 0) {
   process.exit(r.status ?? 1);
 }
-const pyForVer = process.env.PYTHON?.trim() || (process.platform === "win32" ? "python" : "python3");
-const vr = spawnSync(pyForVer, ["-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"], {
+const vr = spawnSync(pyExe, ["-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"], {
   cwd: root,
   encoding: "utf8",
   env: childEnv,

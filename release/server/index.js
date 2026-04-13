@@ -3360,22 +3360,8 @@ if (serveStatic) {
   }
 }
 
-// Do not pass a listen callback: Express 5 wires the same once()-wrapped function to
-// server.once("error", ...), so EADDRINUSE still invokes that callback and prints "started"
-// even though nothing is listening — the process then exits with code 0.
-const server = app.listen(PORT);
-server.on("listening", () => {
+app.listen(PORT, () => {
   const mode =
     serveStatic && fs.existsSync(path.join(staticRoot, "index.html")) ? "api+static" : "api";
   console.log(`Server (${mode}) on http://localhost:${PORT}`);
-});
-server.on("error", (err) => {
-  if (err && err.code === "EADDRINUSE") {
-    console.error(
-      `[srv] Port ${PORT} is already in use. Stop the other process or set PORT to another value.`,
-    );
-  } else {
-    console.error("[srv] Listen error:", err?.message || err);
-  }
-  process.exit(1);
 });
